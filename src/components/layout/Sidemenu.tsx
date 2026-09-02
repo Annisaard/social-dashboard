@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Users,
   Package,
-  Settings,
   FileText,
   ChevronLeft,
   ChevronRight,

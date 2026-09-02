@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFetchAlbumById, useFetchPhotobyAlbumId } from "@/hooks/useApi";
 import type { AlbumDetailTypes } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export const AlbumDetail = () => {
   const { id } = useParams<{ id: string }>();
