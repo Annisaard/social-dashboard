@@ -23,11 +23,18 @@ export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
 
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [isOpenModalDeletePosts, setIsOpenModalDeletePosts] = useState(false);
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedComment, setSelectedComment] = useState<{
     id: number;
     email: string;
   } | null>(null);
+  const [selectedPost, setSelectedPost] = useState<{
+    id: number;
+    title: string;
+  } | null>(null);
+
   const { mutateAsync: updatePost, isPending } = useUpdatePost();
   const { data: postData, isLoading: isPostLoading } = useFetchPostById(
     id ?? "",
@@ -46,18 +53,22 @@ export default function PostDetail() {
     });
     setIsOpenModalDelete(true);
   };
+
+  const openDeleteModalPosts = (id: number, title: string) => {
+    setSelectedPost({
+      id,
+      title,
+    });
+    setIsOpenModalDeletePosts(true);
+  };
   const handleDeletePosts = async (id: number) => {
     try {
       await deletePosts(id);
       toast.success("Deleted Posts Successfully");
-      setIsOpenModalDelete(false);
+      setIsOpenModalDeletePosts(false);
     } catch (error) {
       toast.error("Something went wrong");
     }
-  };
-  
-  const handleEditComment = () => {
-    console.log;
   };
 
   const handleDeleteComment = async (id: number) => {
@@ -110,8 +121,7 @@ export default function PostDetail() {
             <DropdownMenuTrigger>
               <button
                 type="button"
-                className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
-              >
+                className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900">
                 <EllipsisVertical className="h-5 w-5" />
               </button>
             </DropdownMenuTrigger>
@@ -120,18 +130,16 @@ export default function PostDetail() {
               <DropdownMenuItem
                 onClick={() => {
                   setIsEditOpen(true);
-                }}
-              >
+                }}>
                 <Pencil className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="text-red-600 focus:text-red-600"
-                onClick={() => {
-                  // handle delete
-                }}
-              >
+                onClick={() =>
+                  openDeleteModalPosts(postData?.id ?? 0, postData?.title ?? "")
+                }>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
@@ -186,10 +194,8 @@ export default function PostDetail() {
                         className="rounded-md p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
                         aria-label={`Edit comment ${comment.id}`}
                         onClick={() => {
-                          // handle edit
                           console.log("Edit comment:", comment.id);
-                        }}
-                      >
+                        }}>
                         <Pencil className="h-4 w-4" />
                       </button>
 
@@ -199,8 +205,7 @@ export default function PostDetail() {
                         aria-label={`Delete comment ${comment.id}`}
                         onClick={() =>
                           openDeleteModal(comment.id, comment.email)
-                        }
-                      >
+                        }>
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -232,11 +237,23 @@ export default function PostDetail() {
         onSubmit={() => handleDeleteComment(selectedComment?.id ?? 0)}
         submitText="Delete"
         disabled={isDeleting}
-        showCancelBtn
-      >
+        showCancelBtn>
         <p className="pt-2">
           Are you sure you want to delete comment from{" "}
           <span className="font-semibold">{selectedComment?.email}</span>
+        </p>
+      </Modal>
+      <Modal
+        isOpen={isOpenModalDeletePosts}
+        onCancel={() => setIsOpenModalDeletePosts(false)}
+        title={""}
+        onSubmit={() => handleDeletePosts(selectedPost?.id ?? 0)}
+        submitText="Delete"
+        disabled={isDeletingPosts}
+        showCancelBtn>
+        <p className="pt-2">
+          Are you sure you want to delete posts{" "}
+          <span className="font-semibold">{selectedPost?.title}</span>
         </p>
       </Modal>
     </div>

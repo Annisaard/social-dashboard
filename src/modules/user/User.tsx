@@ -35,13 +35,12 @@ export default function UserPage() {
     },
     {
       id: "actions",
-      header: "Actions",
       size: 90,
       cell: ({ row }) => {
         const id = row.original.id || "";
         return (
-          <button onClick={() => navigate(`${id}`)}>
-            <Eye />
+          <button onClick={() => navigate(`${id}`)} className="cursor-pointer">
+            <Eye className="size-4 text-green-600" />
           </button>
         );
       },
@@ -50,7 +49,14 @@ export default function UserPage() {
   ];
 
   return (
-    <div>
+    <div className="min-w-0 flex-1 space-y-6 p-6">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
+
+        <p className="text-sm text-muted-foreground">
+          Manage and view all user.
+        </p>
+      </div>
       <DataTable
         columns={ListUserColumns}
         data={userData ?? []}

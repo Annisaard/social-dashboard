@@ -1,6 +1,5 @@
 import type React from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { X } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -49,16 +48,14 @@ export default function Modal({
     <Dialog open={isOpen} onOpenChange={onCancel}>
       <DialogContent
         className={`flex max-h-[90vh] flex-col  ${className}`}
-        style={style}
-      >
+        style={style}>
         <DialogHeader>
           {title && <DialogTitle>{title}</DialogTitle>}
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
         <div
-          className={`scrollbar-hidden grow overflow-y-auto text-sm ${centered && "text-center"}`}
-        >
+          className={`scrollbar-hidden grow overflow-y-auto text-sm ${centered && "text-center"}`}>
           {children}
         </div>
         {/* Footer Modal */}
@@ -70,8 +67,7 @@ export default function Modal({
                 type="button"
                 onClick={onCancel}
                 variant="outline"
-                className="basis-1/2"
-              >
+                className="basis-1/2">
                 {cancelText}
               </Button>
             )}
@@ -80,8 +76,7 @@ export default function Modal({
               type="submit"
               className={`${showCancelBtn ? "basis-1/2" : "w-full"}`}
               onClick={onSubmit}
-              disabled={disabled}
-            >
+              disabled={disabled}>
               {submitText}
             </Button>
           </DialogFooter>

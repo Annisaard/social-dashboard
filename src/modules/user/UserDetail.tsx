@@ -5,6 +5,7 @@ import {
   useFetchPostsByUserId,
   useFetchUserDetail,
 } from "@/hooks/useApi";
+import { getInitials } from "@/lib/utils";
 import type { AlbumDetailTypes, PostTypes } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye, Mail, Phone, Trash } from "lucide-react";
@@ -16,38 +17,45 @@ export default function UserDetail() {
   if (!id) {
     return <div>User ID not found</div>;
   }
-
-  const { data: userDetail, isLoading } = useFetchUserDetail(id);
-  const { data: postData } = useFetchPostsByUserId(id);
-  const { data: albumData } = useFetchAlbumByUserId(id);
+  const { data: userDetail, isLoading: isUserLoading } = useFetchUserDetail(id);
+  const { data: postData, isLoading: isPostLoading } =
+    useFetchPostsByUserId(id);
+  const { data: albumData, isLoading: isAlbumLoading } =
+    useFetchAlbumByUserId(id);
 
   const ListPostUserColumns: ColumnDef<PostTypes>[] = [
     {
       id: "title",
       accessorKey: "title",
       header: "Title",
-      size: 120,
+      size: 200,
     },
     {
       id: "detail",
       header: "Detail",
-      accessorKey: "body",
-      size: 120,
+      accessorKey: "detail",
+      size: 340,
     },
 
     {
       id: "actions",
-      header: "Actions",
       size: 90,
       cell: ({ row }) => {
         const id = row.original.id || "";
         return (
-          <div>
-            <button onClick={() => navigate(`${id}`)}>
-              <Eye />
+          <div className="flex gap-3">
+            <button
+              onClick={() => navigate(`/posts/${id}`)}
+              className="cursor-pointer">
+              <Eye className="size-4 text-green-600" />
             </button>
-            <button>
-              <Trash />
+            <button
+              className="cursor-pointer"
+              // onClick={() =>
+              //   openDeleteModal(row.original.id, row.original.title)
+              // }
+            >
+              <Trash className="size-4 text-red-600" />
             </button>
           </div>
         );
@@ -60,67 +68,83 @@ export default function UserDetail() {
       id: "title",
       accessorKey: "title",
       header: "Title",
-      size: 120,
+      size: 300,
     },
 
     {
       id: "actions",
-      header: "Actions",
       size: 90,
       cell: ({ row }) => {
         const id = row.original.id || "";
         return (
-          <button onClick={() => navigate(`${id}`)}>
-            <Eye />
+          <button
+            onClick={() => navigate(`/albums/${id}`)}
+            className="cursor-pointer">
+            <Eye className="size-4 text-green-600" />
           </button>
         );
       },
     },
   ];
   return (
-    <div>
+    <div className="min-w-0 flex-1 space-y-6 p-6">
       <Card>
-        <CardHeader>
-          <div className="size-5 rounded-full">SJ</div>
-        </CardHeader>
-        <CardContent>
-          <h5>{userDetail?.name}</h5>
-          <div className="flex items-center gap-1">
-            <Mail className="size-3" />
-            <p>{userDetail?.email}</p>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <div className="flex size-14 items-center justify-center rounded-full bg-gray-300 text-lg font-semibold text-primary-foreground">
+            {getInitials(userDetail?.name)}
           </div>
-          <div className="flex items-center gap-1">
-            <Phone className="size-3" />
-            <p>{userDetail?.phone}</p>
-          </div>
-          <div className="w-full border-t border-gray-300" />
-          <div className="flex justify-between">
-            <p>Address</p>
-            <p>{userDetail?.address.city}</p>
-          </div>
-          <div className="flex justify-between">
-            <p>Company</p>
-            <p>
-              {userDetail?.address?.city}, {userDetail?.address?.street} (
-              {userDetail?.address?.zipcode})
+          <div>
+            <h2 className="text-lg font-semibold">
+              {isUserLoading ? "Loading..." : userDetail?.name}
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              @{userDetail?.username}
             </p>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-3">
+          <div className="flex items-center gap-2 text-sm">
+            <Mail className="size-4 text-muted-foreground" />
+            <span>{userDetail?.email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <Phone className="size-4 text-muted-foreground" />
+            <span>{userDetail?.phone}</span>
+          </div>
+
+          <div className="border-t border-gray-200 pt-3" />
+
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Address</span>
+            <span className="text-right font-medium">
+              {userDetail?.address?.street}, {userDetail?.address?.city} (
+              {userDetail?.address?.zipcode})
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Company</span>
+            <span className="text-right font-medium">
+              {userDetail?.company?.name}
+            </span>
           </div>
         </CardContent>
       </Card>
-      <div>
-        <h2>Post</h2>
+      <div className="space-y-3">
+        <h3 className="text-base font-semibold">Posts</h3>
         <DataTable
           columns={ListPostUserColumns}
           data={postData ?? []}
-          isLoading={isLoading}
+          isLoading={isPostLoading}
         />
       </div>
-      <div>
-        <h2>Album</h2>
+
+      <div className="space-y-3">
+        <h3 className="text-base font-semibold">Albums</h3>
         <DataTable
           columns={ListAlbum}
           data={albumData ?? []}
-          isLoading={isLoading}
+          isLoading={isAlbumLoading}
         />
       </div>
     </div>
