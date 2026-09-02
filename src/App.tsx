@@ -7,12 +7,13 @@ import PostPage from "./modules/posts/Post";
 import PostDetail from "./modules/posts/PostDetail";
 import AlbumPage from "./modules/album/Album";
 import { AlbumDetail } from "./modules/album/AlbumDetail";
+import { Dashboard } from "./modules/dashboard/dashboard";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
-        {/* <Route path="/home" element={<Dashboard />} /> */}
+        <Route path="/home" element={<Dashboard />} />
         <Route path="/users" element={<User />} />
         <Route path="/users/:id" element={<UserDetail />} />
         <Route path="/posts" element={<PostPage />} />
