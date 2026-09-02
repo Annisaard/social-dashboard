@@ -9,7 +9,6 @@ A simple social dashboard built as a frontend technical test.
 * View user's albums
 * View post details and comments
 * View album photos
-* View photo details
 * Create, edit, and delete posts
 * Create, edit, and delete comments
 
@@ -23,7 +22,6 @@ A simple social dashboard built as a frontend technical test.
 * Formik + Yup
 * Tailwind CSS
 * shadcn/ui
-* Vitest + React Testing Library
 
 I use **shadcn/ui** to speed up the development process and keep the UI components consistent.
 
@@ -36,7 +34,6 @@ Main endpoints:
 * `/users`
 * `/posts`
 * `/albums`
-* `/photos`
 * `/comments`
 
 ## Getting Started
