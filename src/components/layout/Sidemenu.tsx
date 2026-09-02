@@ -6,7 +6,6 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
-  LogOut,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
