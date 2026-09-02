@@ -27,10 +27,10 @@ export default function UserPage() {
       header: "Phone",
     },
     {
-      id: "cpmpany",
+      id: "company",
       header: "Company",
       cell: ({ row }) => {
-        <span className="">{row.original.company.name}</span>;
+        return <span className="">{row.original.company.name}</span>;
       },
     },
     {

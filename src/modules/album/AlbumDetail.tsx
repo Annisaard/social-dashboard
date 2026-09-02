@@ -27,7 +27,17 @@ export const AlbumDetail = () => {
       accessorKey: "thumbnailUrl",
       size: 120,
       cell: ({ row }) => {
-        <img src={row.original.thumbnailUrl} alt="thumbnail" />;
+        return (
+          <img
+            src={row.original.thumbnailUrl}
+            alt={row.original.title}
+            className="h-16 w-16 rounded-md object-cover"
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "https://placehold.co/64x64?text=No+Image";
+            }}
+          />
+        );
       },
     },
     {
@@ -36,7 +46,17 @@ export const AlbumDetail = () => {
       accessorKey: "url",
       size: 120,
       cell: ({ row }) => {
-        <img src={row.original.url} alt="img" />;
+        return (
+          <img
+            src={row.original.url}
+            alt={row.original.title}
+            className="h-16 w-16 rounded-md object-cover"
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.src = "https://placehold.co/64x64?text=No+Image";
+            }}
+          />
+        );
       },
     },
   ];

@@ -41,16 +41,18 @@ export default function SimpleSidebar() {
       <aside
         className={`flex flex-col border-r border-neutral-200 bg-white transition-all duration-200 ${
           collapsed ? "w-16" : "w-64"
-        }`}>
+        }`}
+      >
         <div className="flex items-center justify-between px-4 py-4 border-b border-neutral-200">
           {!collapsed && (
-            <span className="text-sm font-semibold text-neutral-900">
-              Sose Dashbaoard
+            <span className="text-lg font-semibold text-neutral-900">
+              Sose Dashboard
             </span>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="ml-auto rounded-md p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900">
+            className="ml-auto rounded-md p-1.5 text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"
+          >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" />
             ) : (
@@ -71,21 +73,14 @@ export default function SimpleSidebar() {
                       ? "bg-neutral-900 text-white"
                       : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
                   }`
-                }>
+                }
+              >
                 <Icon className="h-4 w-4 shrink-0" />
                 {!collapsed && <span>{label}</span>}
               </NavLink>
             );
           })}
         </nav>
-
-        {/* Footer */}
-        <div className="border-t border-neutral-200 px-2 py-3">
-          <button className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900">
-            <LogOut className="h-4 w-4 shrink-0" />
-            {!collapsed && <span>Keluar</span>}
-          </button>
-        </div>
       </aside>
     </div>
   );

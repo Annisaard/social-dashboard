@@ -25,7 +25,8 @@ export default function AlbumPage() {
         return (
           <button
             onClick={() => navigate(`/albums/${id}`)}
-            className="cursor-pointer">
+            className="cursor-pointer"
+          >
             <Eye className="size-4 text-green-600" />
           </button>
         );
@@ -39,7 +40,7 @@ export default function AlbumPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Album</h1>
 
         <p className="text-sm text-muted-foreground">
-          Manage and view all user.
+          Manage and view all album.
         </p>
       </div>
       <DataTable
