@@ -5,6 +5,7 @@ import {
   useDeleteComment,
   useFetchCommentByPostId,
   useFetchPostById,
+  useUpdatePost,
 } from "@/hooks/useApi";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -15,22 +16,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModalPost } from "./components/ModalPost";
+import type { PostPayload } from "@/types/types";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
 
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedComment, setSelectedComment] = useState<{
     id: number;
     email: string;
   } | null>(null);
-
+  const { mutateAsync: updatePost, isPending } = useUpdatePost();
   const { data: postData, isLoading: isPostLoading } = useFetchPostById(
     id ?? "",
   );
   const { data: commentData, isLoading: isCommentLoading } =
     useFetchCommentByPostId(id ?? "");
-  const { mutateAsync: mutateDelete, isPending: isDeleting } =
+  const { mutateAsync: deleteComment, isPending: isDeleting } =
+    useDeleteComment();
+  const { mutateAsync: deletePosts, isPending: isDeletingPosts } =
     useDeleteComment();
 
   const openDeleteModal = (id: number, email: string) => {
@@ -40,18 +46,42 @@ export default function PostDetail() {
     });
     setIsOpenModalDelete(true);
   };
-
+  const handleDeletePosts = async (id: number) => {
+    try {
+      await deletePosts(id);
+      toast.success("Deleted Posts Successfully");
+      setIsOpenModalDelete(false);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+  
   const handleEditComment = () => {
     console.log;
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDeleteComment = async (id: number) => {
     try {
-      await mutateDelete(id);
-      toast.success("Deleted Successfully");
+      await deleteComment(id);
+      toast.success("Deleted Comment Successfully");
       setIsOpenModalDelete(false);
     } catch (error) {
       toast.error("Something went wrong");
+    }
+  };
+
+  const handleUpdatePost = async (data: PostPayload) => {
+    try {
+      await updatePost({
+        postId: id!,
+        payload: data,
+      });
+
+      toast.success("Post updated");
+      setIsEditOpen(false);
+    } catch (error) {
+      console.error("Failed to update post:", error);
+      toast.error("Failed to update post");
     }
   };
   if (!id) {
@@ -89,7 +119,7 @@ export default function PostDetail() {
             <DropdownMenuContent align="end" className="w-36">
               <DropdownMenuItem
                 onClick={() => {
-                  // handle edit
+                  setIsEditOpen(true);
                 }}
               >
                 <Pencil className="mr-2 h-4 w-4" />
@@ -187,11 +217,19 @@ export default function PostDetail() {
           </Card>
         )}
       </section>
+      <ModalPost
+        isOpen={isEditOpen}
+        onCancel={() => setIsEditOpen(false)}
+        mode="edit"
+        onSubmit={handleUpdatePost}
+        isSubmitting={isPending}
+        initialData={postData}
+      />
       <Modal
         isOpen={isOpenModalDelete}
         onCancel={() => setIsOpenModalDelete(false)}
         title={""}
-        onSubmit={() => handleDelete(selectedComment?.id ?? 0)}
+        onSubmit={() => handleDeleteComment(selectedComment?.id ?? 0)}
         submitText="Delete"
         disabled={isDeleting}
         showCancelBtn

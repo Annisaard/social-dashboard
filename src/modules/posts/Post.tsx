@@ -1,11 +1,11 @@
 import { DataTable } from "@/components/data-table/TableList";
 import { Button } from "@/components/ui/button";
 import { useCreatePost, useDeletePost, useFetchPostList } from "@/hooks/useApi";
-import type { PostTypes } from "@/types/types";
+import type { PostPayload, PostTypes } from "@/types/types";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye, Plus, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ModalCreatePost } from "./components/ModalCreatePost";
+import { ModalPost } from "./components/ModalPost";
 import { useState } from "react";
 import { toast } from "sonner";
 import Modal from "@/components/Modal";
@@ -32,16 +32,12 @@ export default function PostPage() {
       toast.error("Something went wrong");
     }
   };
-  const handleCreatePost = async (data: {
-    title: string;
-    id: number;
-    body: string;
-  }) => {
+  const handleCreatePost = async (data: PostPayload) => {
     try {
       await createPost({
         title: data.title,
         body: data.body,
-        userId: data.id,
+        userId: data.userId,
       });
       toast.success("Success create post");
       setIsModalOpen(false);
@@ -120,9 +116,10 @@ export default function PostPage() {
         isLoading={isLoading}
       />
 
-      <ModalCreatePost
+      <ModalPost
         isOpen={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
+        mode="create"
         onSubmit={handleCreatePost}
         isSubmitting={isPending}
       />

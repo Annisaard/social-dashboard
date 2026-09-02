@@ -86,19 +86,24 @@ export function useDeletePost() {
 }
 export function useUpdatePost() {
   const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       postId,
       payload,
     }: {
       postId: string;
-      payload: PostTypes;
+      payload: PostPayload;
     }) => {
       const { data } = await put(`${configs.endpointPosts}/${postId}`, payload);
+
       return data;
     },
+
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["post"] });
+      queryClient.invalidateQueries({
+        queryKey: ["post"],
+      });
     },
   });
 }
